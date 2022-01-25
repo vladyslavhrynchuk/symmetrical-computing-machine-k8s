@@ -1,0 +1,7 @@
+To install k8s cluster, node with 2CPU and 2GB of RAM is required.
+Swap on the node needs to be turned off.
+Cointainer runtime needs to be istalled.
+Cgroup driver of the container runtime must match Cgroup driver of k8s.
+After instalin kubeadm, network add-on must be installed (only on master node).
+
+
