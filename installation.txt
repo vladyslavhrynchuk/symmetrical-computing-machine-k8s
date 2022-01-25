@@ -1,6 +1,6 @@
 To install k8s cluster, node with 2CPU and 2GB of RAM is required.
 Swap on the node needs to be turned off.
-Cointainer runtime needs to be istalled.
+Container runtime needs to be istalled.
 Cgroup driver of the container runtime must match Cgroup driver of k8s.
 After instalin kubeadm, network add-on must be installed (only on master node).
 
@@ -21,6 +21,63 @@ Installing container runtime
 4. Install Docker:
 	sudo apt-get update
  	sudo apt-get install docker-ce docker-ce-cli containerd.io
-
 5. Check if it was installed succesfully
 	sudo docker run hello-world
+
+Installing kubeadm
+1. Disable SWAP
+	sudo swapoff -a
+	sudo sed -i '/ swap / s/^/#/' /etc/fstab
+2. Check what Cgroup driver is used by Docker and set up the same for k8s
+	a) docker info | grep Cgroup
+	b) modify /etc/systemd/system/kubelet.service.d/10-kubeadm.conf by adding a --cgroup-driver flag corresponsing to Docker cgroup
+   It will look like:
+	''
+	Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/e`tc/kubernetes/kubelet.conf --cgroup-driver=cgroupfs"
+	''
+3. Check if br_netfilter kernel module is loaded. run lsmod | grep br_netfilter.
+   To load the module type sudo modprobe br_netfilter.
+   To correctly process bridged traffic, net.bridge.bridge-nf-call-iptables must be set to 1 in sysctl configs.
+   Type:
+	cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+	br_netfilter
+	EOF
+
+	cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+	net.bridge.bridge-nf-call-ip6tables = 1
+	net.bridge.bridge-nf-call-iptables = 1
+	EOF
+
+	sudo sysctl --system
+4. Make sure port 6443 is open.
+5. Update APT and run:
+	sudo apt-get install -y apt-transport-https ca-certificates curl
+6. Download the GPG key
+	sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+7. Add k8s to APT repostory
+	 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+8.Install kubelet, kubeadm, kubectl
+	sudo apt-get update
+	sudo apt-get install -y kubelet kubeadm kubectl
+	- pin their versions:
+		sudo apt-mark hold kubelet kubeadm kubectl
+
+Install network and configure cluster
+1. Run kubeadm init with --pod-network-cidr option
+	sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+2. Configure kubectl for your user
+	mkdir -p $HOME/.kube
+	sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+	sudo chown $(id -u):$(id -g) $HOME/.kube/config
+3. Install network (Calivo in this case)
+	kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+	kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+4. Remove the taints on the master so that you can schedule pods on it.
+	kubectl taint nodes --all node-role.kubernetes.io/master-
+5. Add worker nodes using token (exact command show after kubeadm init finished)
+6. Reset configs wot kubeadm reset
+
+links:
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+https://stackoverflow.com/questions/49112336/container-runtime-network-not-ready-cni-config-uninitialized
+https://projectcalico.docs.tigera.io/getting-started/kubernetes/quickstart
