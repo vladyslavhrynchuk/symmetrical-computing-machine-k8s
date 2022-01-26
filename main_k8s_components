@@ -1,0 +1,32 @@
+Main components are pod, service, ingress, configmap, secret, deployment, statefulset, volume
+
+Pod 
+Pod is the smalest unit. it usually contains 1 docker container, but can also contain multiple containers.
+Pod can contain startup container. Pod has it's own ip
+
+Service
+Service is used to consolidate pods. Since pods are come and go, their IP adreeses constantly changing.
+Service has permanent ip address.
+There are internal and external services.
+External is open to world, internal is not.
+
+Ingress 
+Ingress does the forwarding to the service.
+
+Configmap
+It contains all configurations data of a service.
+Like DB address and other services address.
+
+Secret
+Secret is used to store passwords
+
+Deployment
+Deployment is a blueprint for the service.
+
+Statefulset 
+Statefulset is similar to Deployment, but used when pods need to have static roles, like in database.
+
+Volume
+Volume used to store data.
+When pod dies, it's data will still be accessible.
+It is usually used for Databases.
