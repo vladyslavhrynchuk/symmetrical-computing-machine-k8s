@@ -1,0 +1,13 @@
+K8s consists of master and worker nodes.
+
+Worker
+3 main componenents needs to be istalled on worker node:
+	- container runtime (to run container)
+	- kubelet (starts a pod and assigns resourcet to container)
+	- kubeproxy (does request forwarding
+Master
+Contains of 4 components:
+	- API (process and forwards requests)
+	- Scheduler (choose worker and sends request to it to schedule the pods based on API or controller request)
+	- Controller (detects when pod dies and sends request to scheduler to schedule it)
+	- ETCD (database which stores pod scailing policy and recource usage of workers)
