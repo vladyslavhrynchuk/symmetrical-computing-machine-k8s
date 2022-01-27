@@ -1,0 +1,45 @@
+YAML files are used to configure pods, services, deployments, statefull sets etc
+YAML file has 3 parts: metadata, specification, status
+Specification field is different for each kind of file (service, deployment)
+Status part is stored in the ETCD.
+
+Abstaraction layers:
+Deployment file manages ReplicaSet
+ReplicaSet manages pods
+Pod manages container
+
+Deployment:
+starts with 'apiVersion' field.
+'kind' field describes type of the file (Deployment in this case)
+has 'metadata' containing lables and name
+'spec' field describes it's specifications. it contains:
+	- replicas (number of desired pods)
+	- selector (should match label of the container in 'template' field)
+	- template (describes container):
+		- has 'metadata', which contain label
+		- has own 'spec' field, which describes pod specifications and contain:
+			- 'containers' describe each container and contains:
+				- 'name'
+				- 'image'
+				- 'ports'
+
+Service
+starts with 'apiVersion" field.
+'kind' field is Service.
+has metadata containing name
+'spec' fiels contain:
+	- 'selector' to match Deployment label
+	- 'ports' which contain:
+		- 'protocol'
+		- 'port' of the service
+		- 'targetPort' of the pod
+
+Label and selectors:
+'metadata' contains labels.
+'spec' contains selectors.
+lablel is a key-value pair which used to bound pods with deployment
+Selector should match some label
+Selector of deployment 'spec' field must match label of container field
+Selector of Service must match label of the deployment
+
+
