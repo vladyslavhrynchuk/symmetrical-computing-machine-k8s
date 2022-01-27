@@ -1,0 +1,14 @@
+By default k8s has 4 namespaces:
+	- kube-system (system processes)
+	- kube-public (publically accessible data)
+	- kube-node-lease (heartbeats of nodes)
+	- default (default for creating pods)
+To create ns: kubectl create ns [name]
+	it can also be created in config map
+
+Use cases:
+	1. Logically group resources by role (monitoring, db, elk)
+	2. Divide ns by teams to avoid conflicts
+	3. Share resources of ther same cluster in different env (stage and preprod can use same ELK)
+	4. Limit resources for ns
+	
