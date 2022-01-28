@@ -1,0 +1,33 @@
+Ingress is an API that manages eternal acces to a cluster.
+It can be threated as a load balancer.
+Can also perform SSL/TLS termination and name-based virtual hosting.
+
+Requirements:
+	- Install ingress conroller
+	- Assing extermal IP (one of cluster nodes) to ingress, can be done in config file on ingress conroller
+	- create ingress yaml file with rules
+
+Installing nginx ingress controller:
+1. Download https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.1/deploy/static/provider/cloud/deploy.yaml to a file using curl
+2. Modify the file by adding external IP adderess to Load Balancer service
+3. check if ingress pod is up and running
+
+Ingress configurataion yaml file:
+Contain 'apiVersion' and 'kind' fields
+Contain 'metadata'
+'spec' field:
+	rules:
+	- http:
+		paths:
+			- path:
+			  pathType:
+	backend: (where traffic will be redirected)
+		service: (name of the service)
+		port: (port number, corresponds to service port number
+
+Resources:
+https://kubernetes.github.io/ingress-nginx/deploy/
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+https://stackoverflow.com/questions/49845021/getting-an-kubernetes-ingress-endpoint-ip-address
+
+
