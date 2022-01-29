@@ -1,0 +1,31 @@
+Helm is a package manager for k8s YAML files.
+It stores YAML files in repositories and it is easy to just download hepm chart to install app.
+You can create your own Helm chart.
+Helm can be used as templating engine.
+You can create one template for different microservices and separate file with values for each microservice.
+Also, using Helm chart, same application can be deployed to multiple envoronments.
+
+Release is an instance of a chart running in a k8s cluster. 
+Eeach time it is installed, new release created
+
+Helm chart sctucture:
+	mychart/ (name of the chart)
+		Chart.yaml (meta informatio about the chart)
+		values.yaml (default values for template files)
+		charts/ (dependencies)
+		templates/ (actual template files
+values.yaml file can be overwritten using 'helm install --set another_values.yaml
+
+Helm has version 2 and version 3
+Version 2:
+Consists of client (CLI) and server (Tiller)
+Tiller runs pod on k8s cluster.
+Such architecture allows release management:
+	- Stores all charts history
+	- Thus, changes can be rolled back
+
+Version 3:
+Tiller was removed due to security
+
+Resources:
+https://helm.sh/docs/intro/using_helm/
