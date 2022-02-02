@@ -1,0 +1,30 @@
+Services
+
+There are 4 service types:
+ - Cluster ip
+ - Headless service
+ - NodePort
+ - Load balancer
+
+Cluster IP
+Each service has it`s own name and IP address.
+Service type by default.
+Provides load balancing. 
+Searches for labels and balances load across pods.
+
+Headless
+Simmilar to Cluster IP, but dont have IP address assigned.
+Need to specify 'clusterIp: None'
+By usind DNS Lookups, client can talk to a service nodes direcly.
+Useful for statefull applications.
+
+NodePort
+Accessible on specific port of a k8s node.
+Need to have 'nodePort' value between 30000 and 32767
+
+Load Balancer
+
+Service accesible using load balancer.
+Has external IP
+
+

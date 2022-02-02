@@ -1,0 +1,32 @@
+Persistent Volume is a resource used to store data.
+Volume is defined using YAML file.
+It has 'apiVersion' and 'kind: PersistentVolume'
+	spec:
+		capacity:
+			storage:
+		volumeMode:
+		aceessMode:
+Volumes are mounted into hard drives and can be of different types (aws storage, nfs etc)
+Volumes are not namespaced.
+
+Persistent Volumes are accesed via Persistent Volume Claim YAML file.
+It claims a volume with certain parameters. And if some volumes matches claim, it will be used.
+It has 'apiVersion' and 'kind: PersistentVolumeClaim'
+	metadata:
+		name
+	spec:
+		storageClassName:
+		volumeMode:
+		acessMode:
+		resources:
+			requests:
+				storage:
+PVC namespaced
+
+Configmap and Secret
+Configmap and secret are specific type of volumes.
+The are managed by k8s, not by PV
+They are mapped to 'volumes:'.
+
+
+
